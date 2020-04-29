@@ -51,6 +51,12 @@ class MailWindowController {
                 { label: 'Zoom In', accelerator: 'CmdOrCtrl+Plus', click: () => { this.zoomIn(); } },
                 { label: 'Zoom Out', accelerator: 'CmdOrCtrl+-', click: () => { this.zoomOut(); } }
             ]
+        }, {
+            label: "Debug",
+            submenu: [
+                { label: "Show Dev Tools", accelerator: "F12", click: () => { this.activeWindow.webContents.toggleDevTools(); } },
+                { label: "ESC for quit", accelerator: "Escape", click: () => { this.activeWindow.hide(); }}
+            ]
         }
         ];
 
