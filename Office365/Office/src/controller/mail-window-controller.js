@@ -31,9 +31,10 @@ class MailWindowController {
         var template = [{
             label: "Application",
             submenu: [
+                { label: "Reload", accelerator: 'CmdOrCtrl+R', click: () => { this.reload(); } },
                 { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
                 { type: "separator" },
-                { label: "Quit", accelerator: "Command+Q", click: function () { app.quit(); } }
+                { label: "Quit", accelerator: "CmdOrCtrl+Q", click: function () { app.quit(); } }
             ]
         }, {
             label: "Edit",
@@ -201,19 +202,19 @@ class MailWindowController {
         console.log(`onWillRedirect: ${url} ${this.activeWindow.getTitle()}`);
 
 
-        if (url.startsWith('https://www.office.com/launch/') || url.indexOf('sharepoint.com')>0) {
+        if (url.startsWith('https://www.office.com/launch/') || url.indexOf('sharepoint.com') > 0) {
             if (url.indexOf('/launch/excel/') > 0 || url.indexOf('.xlsx') > 0) {
                 this.onedrive.setIcon(path.join(__dirname, '../../assets/excel_linux_black.png'))
-            } else  if (url.indexOf('/launch/word/') > 0 || url.indexOf('.docx') > 0) {
+            } else if (url.indexOf('/launch/word/') > 0 || url.indexOf('.docx') > 0) {
                 this.onedrive.setIcon(path.join(__dirname, '../../assets/word_linux_black.png'))
-            } else  if (url.indexOf('/launch/powerpoint/') > 0 || url.indexOf('.pptx') > 0) {
+            } else if (url.indexOf('/launch/powerpoint/') > 0 || url.indexOf('.pptx') > 0) {
                 this.onedrive.setIcon(path.join(__dirname, '../../assets/powerpoint_linux_black.png'))
-            } else  if (url.indexOf('/launch/onenote/') > 0 ) { //Don't knowhow to do this one...
+            } else if (url.indexOf('/launch/onenote/') > 0) { //Don't knowhow to do this one...
                 this.onedrive.setIcon(path.join(__dirname, '../../assets/onenote_linux_black.png'))
             } else {
                 this.onedrive.setIcon(path.join(__dirname, '../../assets/office_linux_black.png'))
             }
-        return;
+            return;
         }
 
 
@@ -223,16 +224,14 @@ class MailWindowController {
 
     onWillNavigate(e, url) {
         console.log(`onWillNavigate: ${url} ${this.activeWindow.getTitle()}`);
-       
+
         let isOutlook = false;
-        for(var outlookUrl of outlookUrls)
-        {
-            if (url.indexOf(outlookUrl) > 0)
-            {
+        for (var outlookUrl of outlookUrls) {
+            if (url.indexOf(outlookUrl) > 0) {
                 isOutlook = true;
                 break;
             }
-        } 
+        }
 
         //To do: This needs to be generalized for anyone using adfs
         if (url.startsWith("https://msft.sts.microsoft.com/adfs/ls/?wa=wsignout1.0")) {
@@ -245,7 +244,7 @@ class MailWindowController {
             app.quit();
             e.preventDefault();
             return;
-        }  else if (isOutlook && url.indexOf('/mail') > 0 && url.indexOf("?authRedirect=true") < 0) {
+        } else if (isOutlook && url.indexOf('/mail') > 0 && url.indexOf("?authRedirect=true") < 0) {
             if (this.activeWindow == this.mail) {
                 e.preventDefault()
                 return;
@@ -311,23 +310,23 @@ class MailWindowController {
             return;
         }
 
-        if (url.indexOf('sharepoint.com')>0  || url.startsWith('https://www.office.com/') ) {
+        if (url.indexOf('sharepoint.com') > 0 || url.startsWith('https://www.office.com/')) {
             if (this.activeWindow == this.onedrive) {
                 this.onedrive.loadURL(url);
                 e.preventDefault()
-                this.onedrive.setIcon(path.join(__dirname, '../../assets/office_linux_black.png'))   
+                this.onedrive.setIcon(path.join(__dirname, '../../assets/office_linux_black.png'))
                 return;
             }
             e.preventDefault()
             console.log('show onedrive');
             this.setActiveWindow(this.onedrive);
             this.onedrive.loadURL(url);
-            this.onedrive.setIcon(path.join(__dirname, '../../assets/office_linux_black.png'))   
+            this.onedrive.setIcon(path.join(__dirname, '../../assets/office_linux_black.png'))
             return;
-        } else if (url.indexOf('https://sharepoint.com/')>0 ) {
+        } else if (url.indexOf('https://sharepoint.com/') > 0) {
             if (this.activeWindow == this.onedrive) {
                 e.preventDefault();
-                this.onedrive.loadURL(url);                
+                this.onedrive.loadURL(url);
                 return;
             }
             e.preventDefault()
@@ -337,10 +336,10 @@ class MailWindowController {
 
 
             return;
-        }  else if (url.startsWith('https://outlook.office365.com/') ) {
+        } else if (url.startsWith('https://outlook.office365.com/')) {
             if (this.activeWindow == this.mail) {
                 e.preventDefault();
-                this.mail.loadURL(url);                
+                this.mail.loadURL(url);
                 return;
             }
             e.preventDefault()
@@ -351,7 +350,7 @@ class MailWindowController {
 
             return;
         }
-        else if (url== 'about:blank' ) {
+        else if (url == 'about:blank') {
             if (this.activeWindow == this.onedrive) {
                 e.preventDefault();
                 //this.onedrive.loadURL(url);                
