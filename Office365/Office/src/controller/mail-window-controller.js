@@ -1,5 +1,6 @@
 const { app, BrowserWindow, shell, ipcMain, Menu, webFrame } = require('electron')
 const settings = require('electron-settings')
+const electronLocalshortcut = require('electron-localshortcut');
 const CssInjector = require('../js/css-injector')
 const path = require('path')
 
@@ -64,6 +65,36 @@ class MailWindowController {
 
         this.activeWindow = this.onedrive;
         this.show();
+
+        // The next two functions only work with keyboard (no mouse) and don't update the
+        // app title properly.
+        electronLocalshortcut.register(this.activeWindow, 'Alt+Left', () => {
+            var currentURL = String(this.activeWindow.webContents.getURL())
+            // If we're on a main screen of an app, go to the Office page.
+            // If we're on the Office main page, do nothing.
+            if (currentURL.endsWith(".aspx")) {
+                this.onedrive.loadURL(officeUrl);
+            } else if (currentURL.endsWith(officeUrl)) {
+                return;
+            }
+
+            // Else, go back.
+            this.mail.webContents.goBack();
+            this.calendar.webContents.goBack();
+            this.people.webContents.goBack();
+            this.files.webContents.goBack();
+            this.onedrive.webContents.goBack();
+        })
+
+        electronLocalshortcut.register(this.activeWindow, 'Alt+Right', () => {
+            this.mail.webContents.goForward();
+            this.calendar.webContents.goForward();
+            this.people.webContents.goForward();
+            this.files.webContents.goForward();
+            this.onedrive.webContents.goForward();
+        })
+
+
     }
 
     zoomOut() {
