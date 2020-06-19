@@ -32,7 +32,8 @@
     "electron-builder": "^21.2.0"
   },
   "dependencies": {
-    "electron-settings": "^3.2.0"
+    "electron-settings": "^3.2.0",
+    "electron-localshortcut": "^3.2.1"
   },
   "build": {
     "appId": "office",
